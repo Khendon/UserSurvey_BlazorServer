@@ -1,77 +1,56 @@
 ﻿@page "/"
 @using UserSurvey_BlazorServer.Data
+@using static UserSurvey_BlazorServer.Data.SurveyEnums
 
-<!--
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
-
--->
-
-<h1>Starfleet Starship Database</h1>
-
-<h2>New Ship Entry Form</h2>
-
-<EditForm Model="@starship" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="@surveydata" OnValidSubmit="@HandleValidSubmit">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
     <p>
         <label>
-            Identifier:
-            <InputText @bind-Value="starship.Identifier" />
-        </label>
-    </p>
-    <p>
-        <label>
-            Description (optional):
-            <InputTextArea @bind-Value="starship.Description" />
-        </label>
-    </p>
-    <p>
-        <label>
-            Primary Classification:
-            <InputSelect @bind-Value="starship.Classification">
-                <option value="">Select classification ...</option>
-                <option value="Exploration">Exploration</option>
-                <option value="Diplomacy">Diplomacy</option>
-                <option value="Defense">Defense</option>
+            Gender:
+            <InputSelect @bind-Value="surveydata.Sex">
+                <option value="">Select Sex...</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
             </InputSelect>
         </label>
     </p>
     <p>
         <label>
-            Maximum Accommodation:
-            <InputNumber @bind-Value="starship.MaximumAccommodation" />
-        </label>
-    </p>
-    <p>
-        <label>
-            Engineering Approval:
-            <InputCheckbox @bind-Value="starship.IsValidatedDesign" />
-        </label>
-    </p>
-    <p>
-        <label>
-            Production Date:
-            <InputDate @bind-Value="starship.ProductionDate" />
+            Age Group:
+            <InputSelect @bind-Value="surveydata.AgeGroup">
+                <option value="">Select your age group...</option>
+                <option value="18">Under 18</option>
+                <option value="18-24">18-24</option>
+                <option value="25-34">25-34</option>
+                <option value="35+">Over 35</option>
+            </InputSelect>
         </label>
     </p>
 
-    <button type="submit">Submit</button>
+    <p>
+        <InputRadioGroup @bind-Value="surveydata.SciFi">
+            Select your favourite Sci-Fi show:
+            <br>
+            @foreach (var scifi in (SciFi[])Enum.GetValues(typeof(SciFi)))
+            {
+                <InputRadio Value="scifi" />
+                <text>&nbsp;</text>@EnumExtensionMethods.GetDescription(scifi)<br>
+            }
+        </InputRadioGroup>
+    </p>
 
     <p>
-        <a href="http://www.startrek.com/">Star Trek</a>,
-        &copy;1966-2019 CBS Studios, Inc. and
-        <a href="https://www.paramount.com">Paramount Pictures</a>
+        <br />
+        <button type="reset">Clear</button>
+        <button type="submit">Submit</button>
     </p>
 </EditForm>
 
 @code {
-    private Starship starship = new() { ProductionDate = DateTime.UtcNow };
+    private SurveyData surveydata = new SurveyData();
 
     private void HandleValidSubmit()
     {
